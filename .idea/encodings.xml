@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/funmelon/client/Client.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/funmelon/client/GUIEntrance.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/funmelon/client/controllers/ChatController.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/funmelon/client/controllers/ListController.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/cn/funmelon/client/controllers/LoginController.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/CDL.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/Cookie.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/CookieList.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/HTTP.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/HTTPTokener.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONArray.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONException.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONML.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONObject.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONPointer.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONPointerException.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONPropertyIgnore.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONPropertyName.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONString.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONStringer.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONTokener.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/JSONWriter.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/Property.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/XML.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/XMLParserConfiguration.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/XMLTokener.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/json/XMLXsiTypeConverter.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="GBK" />
+    <file url="PROJECT" charset="GBK" />
+  </component>
+</project>
