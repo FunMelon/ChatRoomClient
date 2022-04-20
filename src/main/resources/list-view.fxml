@@ -26,7 +26,7 @@
    <top>
       <HBox alignment="CENTER" prefHeight="45.0" prefWidth="350.0" style="-fx-background-color: #263F73;" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="userNameLabel" prefHeight="22.0" prefWidth="170.0" text="用户名填在这里" textFill="WHITE">
+            <Label fx:id="userNameLabel" prefHeight="22.0" prefWidth="132.0" text="用户名填在这里" textFill="WHITE">
                <font>
                   <Font name="Consolas" size="18.0" />
                </font>
@@ -41,8 +41,9 @@
                   </Lighting>
                </effect>
             </Label>
-            <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" prefWidth="66.0" text="修改昵称" />
-            <Button fx:id="exitButton1" layoutX="239.0" layoutY="21.0" mnemonicParsing="false" onAction="#exitButtonOnAction" text="退出登录" />
+            <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" prefWidth="65.0" text="修改昵称" />
+            <Button fx:id="exitButton1" layoutX="239.0" layoutY="21.0" mnemonicParsing="false" onAction="#exitButtonOnAction" prefWidth="65.0" text="退出登录" />
+            <Button fx:id="refreshButton" layoutX="204.0" layoutY="21.0" mnemonicParsing="false" onAction="#RefreshButtonOnAction" prefWidth="65.0" text="刷新" />
          </children>
          <effect>
             <DropShadow />

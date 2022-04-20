@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -13,7 +14,7 @@ public class GUIEntrance extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(GUIEntrance.class.getResource("/login-in-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 520, 400);
-        stage.setTitle("¡ƒÃÏ “");
+        stage.setTitle("ËÅäÂ§©ÂÆ§");
         stage.getIcons().add(new Image("/icon.png"));
         //stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(false);

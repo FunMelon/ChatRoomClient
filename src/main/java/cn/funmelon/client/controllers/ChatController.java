@@ -1,5 +1,7 @@
 package cn.funmelon.client.controllers;
 
+import cn.funmelon.client.Client;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -9,28 +11,34 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import json.JSONObject;
 
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class ChatController implements Initializable {
+public class ChatController implements Initializable, Runnable {
     // stage
     static private Stage stage;
     // user id
-    private String userId;
-    // friend id
-    private String friendId;
-    // friend name
-    private String friendName;
+    private static String userId;
+    // user name
+    private static String userName;
+    // friend 's all information
+    private static Map<String, String> friend;
+    // running status
+    public static boolean isRunning = true;
     // message log
     private StringBuffer infoLog;
     // receive message thread
     private Thread receiveMessageThread;
     // date format
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @FXML
     private Button sendButton;
@@ -45,26 +53,27 @@ public class ChatController implements Initializable {
 
     public static void setStage(Stage stage) {
         ChatController.stage = stage;
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                System.out.print("¼àÌıµ½chat´°¿Ú¹Ø±Õ");
-            }
-        });
+
     }
 
-    public void setUser(Map<String, String> user) {
-        this.userId = user.get("user_id");
+    public static void setUser(Map<String, String> user) {
+        userId = user.get("user_id");
+        userName = user.get("user_name");
     }
 
-    public void setFriend(Map<String, String> friend) {
-        this.friendId = friend.get("user_id");
-        this.friendName = friend.get("user_name");
+    public static void setFriend(Map<String, String> friend) {
+        ChatController.friend = friend;
     }
 
     public void sendButtonOnAction(ActionEvent event) {
-        if (!sendTextArea.getText().equals("")) {
-            // TODO send message
+        String str = sendTextArea.getText();
+        if (!str.equals("")) {
+            String date = dateFormat.format(new Date());
+            String msg = String.format("#%s#" + "\n" + "%s: %s", date, userName, str);
+            sendTextArea.setText("");
+            mainTextArea.appendText(msg + "\n\n");
+
+            Client.sendMessage(msg, userId, friend.get("user_id"));
         }
     }
 
@@ -74,8 +83,52 @@ public class ChatController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.infoLog = new StringBuffer();
-        friendNameLabel.setText(String.format("Óë%sÁÄÌìÖĞ...", this.friendName));
+        friendNameLabel.setText(String.format("ä¸%sèŠå¤©ä¸­...", friend.get("user_name")));
         // you can 't edit it!
         mainTextArea.cancelEdit();
+        resetThread();
+//        stage = (Stage) mainTextArea.getScene().getWindow();
+//        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+//            @Override
+//            public void handle(WindowEvent event) {
+//                System.out.print("ç›‘å¬åˆ°chatçª—å£å…³é—­");
+//                isRunning = false;
+//            }
+//        });
+    }
+
+    @Override
+    public void run() {
+        byte[] buffer = new byte[1024];
+        while (ChatController.isRunning) {
+            try {
+                InetAddress address = InetAddress.getByName(Client.SERVER_IP);
+                DatagramPacket packet = new DatagramPacket(buffer,
+                        buffer.length, address, Client.SERVER_PORT);
+                Client.socket.receive(packet);
+                String str = new String(buffer, 0, packet.getLength());
+                System.out.println("ä»æœåŠ¡å™¨æ¥å—åˆ°ï¼š " + str);
+
+                JSONObject jsonObject = new JSONObject(str);
+                String msg = (String)jsonObject.get("message");
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        mainTextArea.appendText(msg + "\n\n");
+                    }
+                });
+            } catch (Exception e) {
+                //System.out.printf("æœªæ¥å—åˆ°%så‘é€æ¶ˆæ¯\n", friend.get("user_name"));
+                //e.printStackTrace();
+            }
+        }
+    }
+
+    public void resetThread() {
+        isRunning = true;
+        // receive message sub thread
+        Thread receiveMessageThread = new Thread(this);
+        // start!
+        receiveMessageThread.start();
     }
 }

@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 import json.JSONObject;
@@ -18,6 +19,8 @@ public class Client {
     public static int SERVER_PORT = 7788;
     // UDP Datagram
     public static DatagramSocket socket;
+    // server address
+    private static InetAddress address;
     // start client
     public static void main(String[] args) throws SocketException {
         if (args.length == 2) {
@@ -28,11 +31,11 @@ public class Client {
             socket = new DatagramSocket();
             // time restrict 5s
             socket.setSoTimeout(1000);
-            System.out.println("øÕªß∂À‘À––...");
+            System.out.println("ÂÆ¢Êà∑Á´ØËøêË°å...");
             // TODO start the GUI
             GUIEntrance.main(args);
         } catch (SocketException e) {
-            System.out.println("Ω®¡¢DatagramSocket ß∞‹");
+            System.out.println("Âª∫Á´ãDatagramSocketÂ§±Ë¥•");
             e.printStackTrace();
         }
     }
@@ -41,7 +44,6 @@ public class Client {
     public static Map login(String userId, String password) {
         // buffer
         byte[] buffer = new byte[2048];
-        InetAddress address;
 
         try {
             address = InetAddress.getByName(SERVER_IP);
@@ -69,9 +71,43 @@ public class Client {
                 return user;
             }
         } catch (IOException e) {
-            System.out.println("∂¡»°¥ÌŒÛ");
+            System.out.println("ËØªÂèñÈîôËØØ");
             e.printStackTrace();
         }
         return null;
+    }
+    // send message to server
+    public static void sendMessage(String str, String senderId, String receiverId) {
+            Map<String, String> msg = new HashMap<String, String>();
+            msg.put("receiver_id", receiverId);
+            msg.put("sender_id", senderId);
+            msg.put("message", str);
+
+            JSONObject jsonObject = new JSONObject(msg);
+            jsonObject.put("command", COMMAND.SENDMSG);
+
+            try {
+                address = InetAddress.getByName(SERVER_IP);
+                byte[] info = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+                DatagramPacket packet = new DatagramPacket(info, info.length, address, SERVER_PORT);
+                Client.socket.send(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+    // logout
+    public static void logout(String userId) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("command", COMMAND.LOGOUT);
+        jsonObject.put("user_id", userId);
+
+        byte[] msg = jsonObject.toString().getBytes();
+        try {
+            address = InetAddress.getByName(Client.SERVER_IP);
+            DatagramPacket packet = new DatagramPacket(msg, msg.length, address, SERVER_PORT);
+            socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -37,7 +37,7 @@ public class LoginController implements Initializable {
     // listen the event when push the "login in" button.
     public void loginButtonOnAction(ActionEvent event) {
         if (!usernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()) {
-            loginMessageLabel.setText("µÇÂ¼ÖĞ...");
+            loginMessageLabel.setText("ç™»å½•ä¸­...");
             Map user = Client.login(usernameTextField.getText(), passwordTextField.getText());
             // read the stage and set new stage
             if (user != null) {
@@ -52,10 +52,10 @@ public class LoginController implements Initializable {
                     e.printStackTrace();
                 }
             } else {
-                loginMessageLabel.setText("ÄúµÄÕËºÅ»òÕßÃÜÂë´íÎó!");
+                loginMessageLabel.setText("æ‚¨çš„è´¦å·æˆ–è€…å¯†ç é”™è¯¯!");
             }
         } else {
-            loginMessageLabel.setText("ÇëÊäÈëÓÃ»§Ãû»òÃÜÂë£¡");
+            loginMessageLabel.setText("è¯·è¾“å…¥ç”¨æˆ·åæˆ–å¯†ç ï¼");
         }
     }
     // listen the event when push the "cancel" button.
