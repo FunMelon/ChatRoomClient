@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -17,6 +16,7 @@ public class GUIEntrance extends Application {
         stage.setTitle("聊天室");
         stage.getIcons().add(new Image("/icon.png"));
         //stage.initStyle(StageStyle.UNDECORATED);
+        stage.setResizable(false);
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();

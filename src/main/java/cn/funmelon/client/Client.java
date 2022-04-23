@@ -22,7 +22,7 @@ public class Client {
     // server address
     private static InetAddress address;
     // start client
-    public static void main(String[] args) throws SocketException {
+    public static void main(String[] args) {
         if (args.length == 2) {
             SERVER_IP = args[0];
             SERVER_PORT = Integer.parseInt(args[1]);
@@ -32,53 +32,47 @@ public class Client {
             // time restrict 5s
             socket.setSoTimeout(1000);
             System.out.println("客户端运行...");
-            // TODO start the GUI
+            // start the gui
             GUIEntrance.main(args);
         } catch (SocketException e) {
             System.out.println("建立DatagramSocket失败");
-            e.printStackTrace();
         }
     }
 
     // client send login request to server
     public static Map login(String userId, String password) {
-        // buffer
         byte[] buffer = new byte[2048];
 
         try {
             address = InetAddress.getByName(SERVER_IP);
-
+            // wrap
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("command", COMMAND.LOGIN);
             jsonObject.put("user_id", userId);
             jsonObject.put("user_pwd", password);
-
-            byte[] msg = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
-            // create the datagramPacket
-            DatagramPacket packet = new DatagramPacket(msg, msg.length, address, SERVER_PORT);
             // send
+            byte[] info = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+            DatagramPacket packet = new DatagramPacket(info, info.length, address, SERVER_PORT);
             socket.send(packet);
             // receive
             packet = new DatagramPacket(buffer, buffer.length, address, SERVER_PORT);
             socket.receive(packet);
 
-            String str = new String(buffer, 0, packet.getLength());
+            String str = new String(buffer, 0, packet.getLength(), StandardCharsets.UTF_8);
             System.out.println("receiveJsonObj = " + str);
             jsonObject = new JSONObject(str);
 
             if ((Integer) jsonObject.get("result") == 0) {
-                Map user = jsonObject.toMap();
-                return user;
+                 return jsonObject.toMap();
             }
         } catch (IOException e) {
-            System.out.println("读取错误");
-            e.printStackTrace();
+            System.out.println("登陆失败");
         }
         return null;
     }
     // send message to server
     public static void sendMessage(String str, String senderId, String receiverId) {
-            Map<String, String> msg = new HashMap<String, String>();
+            Map<String, String> msg = new HashMap<>();
             msg.put("receiver_id", receiverId);
             msg.put("sender_id", senderId);
             msg.put("message", str);
@@ -91,8 +85,9 @@ public class Client {
                 byte[] info = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
                 DatagramPacket packet = new DatagramPacket(info, info.length, address, SERVER_PORT);
                 Client.socket.send(packet);
+                System.out.println("已成功发送报文到服务器");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("发送消息失败");
             }
     }
     // logout
@@ -106,8 +101,9 @@ public class Client {
             address = InetAddress.getByName(Client.SERVER_IP);
             DatagramPacket packet = new DatagramPacket(msg, msg.length, address, SERVER_PORT);
             socket.send(packet);
+            System.out.println("成功向服务端发送下线消息");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("发送下线消息失败");
         }
     }
 }

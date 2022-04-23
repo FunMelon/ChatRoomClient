@@ -35,9 +35,8 @@ public class LoginController implements Initializable {
     }
 
     // listen the event when push the "login in" button.
-    public void loginButtonOnAction(ActionEvent event) {
+    public void loginButtonOnAction() {
         if (!usernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank()) {
-            loginMessageLabel.setText("登录中...");
             Map user = Client.login(usernameTextField.getText(), passwordTextField.getText());
             // read the stage and set new stage
             if (user != null) {
@@ -49,7 +48,7 @@ public class LoginController implements Initializable {
                             , 350, 700);
                     stage.setScene(swiftScene);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.out.println("页面切换失败");
                 }
             } else {
                 loginMessageLabel.setText("您的账号或者密码错误!");
@@ -59,7 +58,7 @@ public class LoginController implements Initializable {
         }
     }
     // listen the event when push the "cancel" button.
-    public void cancelButtonOnAction(ActionEvent event) {
+    public void cancelButtonOnAction() {
         Stage stage = (Stage)cancelButton.getScene().getWindow();
         stage.close();
     }
