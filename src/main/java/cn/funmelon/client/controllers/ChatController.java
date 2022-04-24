@@ -3,15 +3,13 @@ package cn.funmelon.client.controllers;
 import cn.funmelon.client.Client;
 import cn.funmelon.client.FileInteraction;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import json.JSONObject;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
-import java.net.DatagramPacket;
-import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
@@ -29,7 +27,9 @@ public class ChatController implements Initializable, Runnable {
     // friend 's all information
     private static Map<String, String> friend;
     // running status
-    public static boolean isRunning = true;
+    public static boolean isRunning;
+    // refresh
+    public static boolean isRefresh;
     // date format
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -49,6 +49,7 @@ public class ChatController implements Initializable, Runnable {
 
     public static void setFriend(Map<String, String> friend) {
         ChatController.friend = friend;
+        System.out.println(friend);
     }
 
     public void sendButtonOnAction() {
@@ -64,13 +65,21 @@ public class ChatController implements Initializable, Runnable {
 
             sendTextArea.setText("");
             FileInteraction.storage(friend.get("user_id"), msg.getBytes(StandardCharsets.UTF_8));
-            mainTextArea.setText(FileInteraction.read(friend.get("user_id")));
+            ChatController.isRefresh = true;
         }
     }
 
     public void clearButtonOnAction() {
-        FileInteraction.clear(friend.get("user_id"));
-        mainTextArea.setText(FileInteraction.read(friend.get("user_id")));
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("清除消息");
+        alert.setHeaderText("警告");
+        alert.setContentText("清除后将无法恢复，真的很久。");
+        Button ok = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+        alert.show();
+        ok.setOnAction(event -> {
+            FileInteraction.clear(friend.get("user_id"));
+            mainTextArea.setText(FileInteraction.read(friend.get("user_id")));
+        });
     }
 
     @Override
@@ -78,36 +87,35 @@ public class ChatController implements Initializable, Runnable {
         // message log
         friendNameLabel.setText(String.format("与%s聊天中...", friend.get("user_name")));
         // you can 't edit it!
-        mainTextArea.setText(FileInteraction.read(friend.get("user_id")));
-        System.out.println("好友的状态是" + friend.get("status"));
-        if (friend.get("status").equals("0")) {
-            sendButton.setDisable(true);
-        } else {
-            sendButton.setDisable(false);
-        }
+        // mainTextArea.setText(FileInteraction.read(friend.get("user_id")));
+        ChatController.isRefresh = true;
+        sendTextArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                KeyCode kc = keyEvent.getCode();
+                if (kc.equals(KeyCode.ENTER) && !sendButton.isDisable()) {
+                    sendButtonOnAction();
+                }
+            }
+        });
         resetThread();
     }
-
     // listen to the information of friends
     @Override
     public void run() {
-        byte[] buffer = new byte[1024];
         while (ChatController.isRunning) {
             try {
-                InetAddress address = InetAddress.getByName(Client.SERVER_IP);
-                DatagramPacket packet = new DatagramPacket(buffer,
-                        buffer.length, address, Client.SERVER_PORT);
-                Client.socket.receive(packet);
-                String str = new String(buffer, 0, packet.getLength(), StandardCharsets.UTF_8);
-                System.out.println("从服务器接受到： " + str);
-
-                JSONObject jsonObject = new JSONObject(str);
-                String msg = (String)jsonObject.get("message");
-                Platform.runLater(() -> {
-                    FileInteraction.storage(friend.get("user_id"), msg.getBytes(StandardCharsets.UTF_8));
-                    mainTextArea.setText(FileInteraction.read(friend.get("user_id")));
-                });
-            } catch (Exception ignored) {
+                // TODO: wait?
+                Thread.sleep(1);
+            } catch (InterruptedException ignored) {}
+            if (ChatController.isRefresh) {
+                Platform.runLater(() -> mainTextArea.setText(FileInteraction.read(friend.get("user_id"))));
+                if (friend.get("status").equals("0")) {
+                    sendButton.setDisable(true);
+                } else {
+                    sendButton.setDisable(false);
+                }
+                ChatController.isRefresh = false;
             }
         }
     }

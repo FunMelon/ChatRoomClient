@@ -1,6 +1,7 @@
 module cn.funmelon.chatroomclient {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.apache.commons.codec;
 
 
     opens cn.funmelon.client to javafx.fxml;

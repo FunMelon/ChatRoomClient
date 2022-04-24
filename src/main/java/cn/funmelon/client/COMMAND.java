@@ -1,5 +1,5 @@
 package cn.funmelon.client;
 
 public enum COMMAND {
-    LOGIN, LOGOUT, SENDMSG
+    LOGIN, LOGOUT, SENDMSG, BROADCAST, KICK,
 }

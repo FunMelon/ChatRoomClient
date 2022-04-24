@@ -1,5 +1,7 @@
 package cn.funmelon.client;
 
+import cn.funmelon.client.controllers.ChatController;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -25,6 +27,7 @@ public class FileInteraction {
         } catch (IOException e) {
             System.out.println("更新缓存失败");
         }
+        ChatController.isRefresh = true;
     }
 
     // clear records

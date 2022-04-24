@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.funmelon.client.controllers.ListController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.funmelon.client.controllers.ListController">
    <bottom>
       <AnchorPane prefHeight="15.0" prefWidth="350.0" style="-fx-background-color: #263F73;" BorderPane.alignment="CENTER">
          <effect>
@@ -76,15 +76,18 @@
       </HBox>
    </top>
    <center>
-      <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane prefHeight="594.0" prefWidth="334.0" BorderPane.alignment="CENTER">
          <content>
-            <Accordion prefHeight="638.0" prefWidth="348.0">
+            <Accordion prefHeight="300.0" prefWidth="348.0">
               <panes>
                 <TitledPane animated="false" prefWidth="348.0" text="我的好友">
                      <content>
                         <ScrollPane prefHeight="20.0" prefWidth="200.0">
                            <content>
-                              <VBox fx:id="friendPanel" prefHeight="590.0" prefWidth="338.0" />
+                              <VBox fx:id="friendPanel" prefHeight="272.0" prefWidth="338.0">
+                                 <effect>
+                                    <DropShadow />
+                                 </effect></VBox>
                            </content>
                         </ScrollPane>
                      </content>
