@@ -3,16 +3,18 @@ package cn.funmelon.client;
 import cn.funmelon.client.controllers.ChatController;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class FileInteraction {
 
-    private static final String path = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("records")).getPath();
-
+    private static final String path = getPath();//FileInteraction.class.getProtectionDomain().getCodeSource().getLocation().getPath();  ;
+    // Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("records")).getPath();
     // append msg in the end of the certain file
     public static void storage(String fileName, byte[] msg) {
-        File file = new File(path + fileName + ".txt");
+        File file = new File(path + "/"+ fileName + ".txt");
+        System.out.println(file);
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -32,7 +34,7 @@ public class FileInteraction {
 
     // clear records
     public static void clear(String fileName) {
-        File file = new File(path + fileName + ".txt");
+        File file = new File(path + "/" + fileName + ".txt");
         if (file.exists()) {
             file.delete();
         }
@@ -40,7 +42,7 @@ public class FileInteraction {
 
     // read records
     public static String read(String fileName) {
-        File file = new File(path + fileName + ".txt");
+        File file = new File(path + "/" + fileName + ".txt");
         if (file.exists()) {
             try {
                 StringBuilder res = new StringBuilder();
@@ -61,5 +63,20 @@ public class FileInteraction {
             }
         }
         return null;
+    }
+
+    public static String getPath()
+    {
+        String path = FileInteraction.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        if(System.getProperty("os.name").contains("dows"))
+        {
+            path = path.substring(1,path.length());
+        }
+        if(path.contains("jar"))
+        {
+            path = path.substring(0,path.lastIndexOf("."));
+            return path.substring(0,path.lastIndexOf("/"));
+        }
+        return path.replace("target/classes/", "");
     }
 }
